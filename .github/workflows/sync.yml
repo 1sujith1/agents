@@ -1,0 +1,24 @@
+name: Scheduled Fork Sync
+
+on:
+  schedule:
+    - cron: '0 2 * * *' # This runs every day at midnight (UTC)
+  workflow_dispatch: # This lets you run it manually with a button click
+
+jobs:
+  sync:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout target repo
+        uses: actions/checkout@v4
+        with:
+          ref: main # Change to 'master' if your branch uses that name
+
+      - name: Sync upstream changes
+        id: sync
+        uses: aormsby/Fork-Sync-With-Upstream-action@v3.4
+        with:
+          upstream_repository: ed-donner/agents # 👈 Put the original repo here!
+          upstream_branch: main # Change to 'master' if needed
+          target_branch: main
+          github_token: ${{ secrets.GITHUB_TOKEN }}
